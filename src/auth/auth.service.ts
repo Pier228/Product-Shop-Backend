@@ -1,16 +1,19 @@
 import {
+  BadGatewayException,
   BadRequestException,
+  ConflictException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create.user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/auth/models/userSchema';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDTO } from './dto/login.user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Profile } from './models/profileSchema';
+import { Roles } from './verifyRoles/roles';
 
 @Injectable()
 export class AuthService {
@@ -24,20 +27,27 @@ export class AuthService {
     try {
       let isExist = await this.findOne(user.login);
 
-      if (!isExist) {
-        const hashedPassword = bcrypt.hashSync(
-          user.password,
-          Number(process.env.HASH_LVL),
-        );
-
-        await this.userModel.create({
-          ...user,
-          password: hashedPassword,
-        });
-        return { message: `Successfully registered` };
-      } else {
-        throw new BadRequestException('User with this login is already exist!');
+      if (isExist) {
+        throw new ConflictException('User with this login is already exist!');
       }
+
+      const hashedPassword = await bcrypt.hash(
+        user.password,
+        Number(process.env.HASH_LVL),
+      );
+
+      let isCreated = await this.userModel.create({
+        ...user,
+        password: hashedPassword,
+      });
+
+      if (!isCreated) {
+        throw new BadGatewayException('User cannot created');
+      }
+
+      const token = await this.createAccessToken(isCreated._id, Roles.User);
+
+      return { message: `Successfully registered`, token };
     } catch (error) {
       throw error;
     }
@@ -57,10 +67,7 @@ export class AuthService {
         throw new UnauthorizedException('Incorrect login or password');
       }
 
-      const token = await this.jwtService.signAsync({
-        id: user._id,
-        role: user.role,
-      });
+      const token = await this.createAccessToken(user._id, user.role);
 
       await this.isProfileCreated(user._id);
 
@@ -71,6 +78,16 @@ export class AuthService {
     } catch (error) {
       throw error;
     }
+  }
+
+  private async createAccessToken(id: string, role: Roles) {
+    const token = await this.jwtService.signAsync({ id, role });
+
+    if (!token) {
+      throw new BadGatewayException('Cannot generate access token');
+    }
+
+    return token;
   }
 
   verifyToken(token: string) {
