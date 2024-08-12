@@ -16,7 +16,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Shop API Documentation')
     .setDescription('The shop API description')
-    .setVersion('1.0')
+    .setVersion('2.0')
     .addTag('Authorization')
     .addTag('Products')
     .build();
