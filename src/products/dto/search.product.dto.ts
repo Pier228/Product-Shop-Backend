@@ -1,5 +1,6 @@
-import { IsOptional, IsString, IsNumberString } from 'class-validator';
+import { IsOptional, IsString, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class SearchProductDTO {
   @ApiProperty({
@@ -17,8 +18,9 @@ export class SearchProductDTO {
     required: false,
   })
   @IsOptional()
-  @IsNumberString()
-  price?: string;
+  @Type(() => Number)
+  @IsNumber()
+  price?: number;
 
   @ApiProperty({
     description: 'Search by the category of the product',

@@ -29,20 +29,33 @@ This project is a backend application for a product shop, developed using the Ne
 ### Core Resources
 
 1. **Auth**
+
    - **Purpose**: Handles user authentication and registration.
    - **Features**: Allows users to create accounts and log in. It manages user sessions and ensures secure access to the system.
 
 2. **Order**
+
    - **Purpose**: Facilitates the process of placing orders for products.
    - **Features**: Users can create and manage their orders through this resource. It ensures that orders are processed accurately and efficiently. Additionally, upon placing an order, the system sends a confirmation email to the user with detailed information about their order. This functionality is powered by an integrated email sender service, ensuring that users receive timely updates and confirmations regarding their purchases.
 
 3. **Products**
+
    - **Purpose**: Manages CRUD (Create, Read, Update, Delete) operations for product data.
    - **Features**: Provides functionalities to add, update, retrieve, and delete products in the database. This resource maintains the product catalog and ensures data integrity.
 
 4. **Profile**
+
    - **Purpose**: Manages user profiles and related functionalities.
    - **Features**: Allows users to view and update their profile information, manage their cart, access their order history, and change their passwords. It ensures a personalized experience for users.
+
+5. **Admin Panel**
+
+   - **Purpose**: Provides advanced management capabilities for admin and moderator users.
+   - **Features**:
+     - View and manage user accounts, profiles, and orders.
+     - Grant roles to users, changing their access permissions.
+     - Retrieve detailed information about orders and filter them by status.
+     - The panel is protected by role-based access control, allowing only authorized users (Admins and Moderators) to perform actions.
 
 ### Role-Based Access Control
 
@@ -107,7 +120,6 @@ $ pnpm run start:prod
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
 
 ## License
 

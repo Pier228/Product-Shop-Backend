@@ -19,7 +19,7 @@ import { Profile, ProfileSchema } from './models/profileSchema';
     JwtModule.register({
       global: true,
       secret: `${process.env.JWT_SECRET}`,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '6h' },
     }),
   ],
   controllers: [AuthController],
