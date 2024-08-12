@@ -21,6 +21,7 @@ import { OrderStatus } from 'src/order/dto/order.status.options';
 import { ChangeOrderStatusDTO } from './dto/change.order.status.dto';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
   ApiForbiddenResponse,
@@ -33,6 +34,7 @@ import {
 } from '@nestjs/swagger';
 
 @ApiTags('Admin panel')
+@ApiBearerAuth()
 @Controller('admin-panel')
 @UseGuards(RolesGuard)
 export class AdminPanelController {
