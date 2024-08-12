@@ -10,6 +10,7 @@ import { updateProductDTO } from './dto/update.product.dto';
 import { CreateProductDTO } from './dto/create.product.dto';
 import { Product } from './model/product.schema';
 import { SearchProductDTO } from './dto/search.product.dto';
+import { defaultSearchResultLimit } from 'src/consts ';
 
 @Injectable()
 export class ProductService {
@@ -18,7 +19,7 @@ export class ProductService {
   ) {}
   async findAll() {
     try {
-      return this.productModel.find().exec();
+      return this.productModel.find().limit(defaultSearchResultLimit).exec();
     } catch (error) {
       throw error;
     }
@@ -39,7 +40,10 @@ export class ProductService {
 
   async findMany(params: SearchProductDTO) {
     try {
-      let response = await this.productModel.find(params).exec();
+      let response = await this.productModel
+        .find(params)
+        .limit(defaultSearchResultLimit)
+        .exec();
       if (!response)
         throw new NotFoundException(
           `Product with this parameters doesn't find`,

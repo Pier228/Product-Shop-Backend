@@ -17,13 +17,13 @@ import { Roles } from 'src/auth/verifyRoles/roles';
 import { RolesGuard } from 'src/auth/verifyRoles/roles.guard';
 import {
   ApiBearerAuth,
-  ApiHeader,
   ApiOperation,
   ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { SearchProductDTO } from './dto/search.product.dto';
+import { SearchLimitDTO } from 'src/admin-panel/dto/search.limit.dto';
 
 @Controller('products')
 @ApiTags('Products')
@@ -41,7 +41,9 @@ export class ProductController {
     status: 404,
     description: 'No products found matching the criteria',
   })
-  async searchProducts(@Query() searchParams: SearchProductDTO) {
+  async searchProducts(
+    @Query() searchParams: SearchProductDTO,
+  ) {
     return this.productService.findMany(searchParams);
   }
 
